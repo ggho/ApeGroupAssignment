@@ -31,7 +31,7 @@ BlackJackGame.prototype = {
 	allPlayersTurn: function() {
 		for (var i = 0; i < this.players.length; i++) {
 			var curPlayer = this.players[i];
-			this.waitForPlayerDecision(curPlayer);
+			this.playerTurn(curPlayer);
 			//waiting time...
 
 		}
