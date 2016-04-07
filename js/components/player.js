@@ -58,7 +58,7 @@ var PlayerBot = function() {
 PlayerBot.prototype = new Player();
 PlayerBot.prototype.constructor = PlayerBot;
 PlayerBot.prototype.decideAction = function(dealerUpCard) {
-	//PlayerBot logic goes here
+	//PlayerBot logic goes here which reference: https://blog.udemy.com/blackjack-card-values/
 	var handPoints = this.hand.getTotalPoints();
 	var bestHandPoint = handPoints.length > 1 ? handPoints[handPoints.length - 1] : handPoints[0];
 
@@ -76,12 +76,12 @@ PlayerBot.prototype.decideAction = function(dealerUpCard) {
 			if(bestHandPoint >= 17)
 				return PlayerAction.STAND;
 			else if(bestHandPoint === 12){
-				if(4 <= dealerUpCard.point && dealerUpCard.point >= 6)
+				if(4 <= dealerUpCard.point && dealerUpCard.point <= 6)
 					return PlayerAction.STAND;
 				else
 					return PlayerAction.HIT;
 			}else{ //point: 13 thr 16
-				if(2 <= dealerUpCard.point && dealerUpCard.point >= 6)
+				if(2 <= dealerUpCard.point && dealerUpCard.point <= 6)
 					return PlayerAction.STAND;
 				else
 					return PlayerAction.HIT;		

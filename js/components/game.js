@@ -9,8 +9,6 @@ var BlackJackGame = function(numOfBot) {
 	for (var i = 0; i < numOfBot; i++)
 		this.players.push(new PlayerBot());
 
-	//Init other properties
-	this.currentPlayerIdx;
 };
 
 BlackJackGame.prototype = {
@@ -25,24 +23,34 @@ BlackJackGame.prototype = {
 		for (var j = 0; j < 2; j++)
 			this.dealTo(this.dealer);
 
-
-		if (this.players.length > 0)
-			this.currentPlayerIdx = 0;
-
-		this.playersTurn();
+		this.allPlayersTurn();
 		//all players done, dealer's turn
 		this.dealerTurn();
 
 	},
-	playersTurn: function() {
-		while (this.currentPlayerIdx < this.players.length) {
-			var curPlayer = this.players[this.currentPlayerIdx];
+	allPlayersTurn: function() {
+		for (var i = 0; i < this.players.length; i++) {
+			var curPlayer = this.players[i];
 			this.waitForPlayerDecision(curPlayer);
 			//waiting time...
 
-			this.currentPlayerIdx++;
 		}
 		return false;
+	},
+	playerTurn: function(player) {
+		var playerDecision;
+		while (playerDecision !== PlayerAction.STAND) {
+			playerDecision = player.decideAction(this.dealer.getUpCard());
+
+			if (playerDecision === PlayerAction.HIT) {
+				this.dealTo(player);
+
+				if (player.isBust()) {
+					//raise a bust event?
+					break; //move on with next player
+				}
+			}
+		}
 	},
 	dealerTurn: function() {
 		//check if all players are busted, if yes, return; else play dealer turn
@@ -58,7 +66,7 @@ BlackJackGame.prototype = {
 		if (allPlayerBusted)
 			return; //finish turn
 
-		//dealer's rules
+		//dealer's turn
 		var dealerDecision;
 		while (dealerDecision !== PlayerAction.STAND) {
 			dealerDecision = this.dealer.decideAction();
@@ -68,32 +76,16 @@ BlackJackGame.prototype = {
 
 				if (this.dealer.isBust()) {
 					//set all player win and return
-					for (var i = 0; i <this.players.length; i++) {
+					for (var i = 0; i < this.players.length; i++) {
 						this.players[i].isWin = true;
 					}
 					return;
 				}
 			}
 		}
-		
+
 		//check winner
 		this.checkWinningPlayer();
-	},
-	waitForPlayerDecision: function(player) {
-		var playerDecision;
-		while (playerDecision !== PlayerAction.STAND) {
-			playerDecision = player.decideAction(this.dealer.getUpCard());
-
-			if (playerDecision === PlayerAction.HIT) {
-				this.dealTo(player);
-
-				if (player.isBust()) {
-					//raise a bust event?
-					break; //move on with next player
-				}
-			}
-		}
-
 	},
 	checkWinningPlayer: function() {
 		var eachPlayer;
@@ -111,7 +103,7 @@ BlackJackGame.prototype = {
 		var str = '';
 		for (var i = 0; i < this.players.length; i++) {
 			str += 'Player' + i + ': ' + this.players[i].handInfoString() + ' ->';
-			str += this.players[i].isWin? 'WIN ' : 'LOSS ' ;
+			str += this.players[i].isWin ? 'WIN ' : 'LOSS ';
 			str += '\n';
 		}
 

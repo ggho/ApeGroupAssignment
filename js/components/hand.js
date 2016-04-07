@@ -10,6 +10,7 @@ Hand.prototype = {
 		return this.cards.splice(cardIdx, 1);
 	},
 	getUpCard: function() {
+		//in blackjack game, first card is always up
 		return this.cards.length > 0 ? this.cards[0] : null;
 	},
 	getTotalPoints: function() {
@@ -27,7 +28,6 @@ Hand.prototype = {
 				result.push(result[result.length - 1] + 10);
 			}
 		}
-
 
 		return result;
 	},
