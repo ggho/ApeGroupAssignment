@@ -9,3 +9,58 @@
 root { 
 	display: block;
 }
+
+.flex-container{
+	display:flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.flex-item{
+	margin: 0 16px;
+	flex: 1 100%;
+}
+
+/* Tablet */
+@media all and (min-width: 600px) {
+	/*general items share a row*/
+	.flex-item{
+		/*flex-basis: auto;*/
+		flex: 1 auto;
+	}
+	/*only core item own a row*/
+	.core-item{
+		order: -1;
+		flex: 2 100%; 
+	}	
+	.item-c{
+		order: 1;
+	}
+}
+
+
+/*Desktop*/
+@media all and (min-width: 800px) {
+	.flex-item{
+		flex: 1 auto;
+	}
+	.item-a{
+		order:1;
+	}
+	.core-item{
+		order:2;
+	}
+	.item-c{
+		order:3;
+	}
+}
+
+/* Wide screens */
+@media all and (min-width: 1280px) {
+	.core-item{
+		flex: 3 0px;
+	}
+}
+
+
